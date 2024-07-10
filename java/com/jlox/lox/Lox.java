@@ -9,58 +9,54 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
-  static boolean hasError = false;
+    static boolean hasError = false;
 
-  public static void main(String[] args) throws IOException {
-    if (args.length > 1) {
-      System.out.println("Usage: jlox [script]");
-      System.exit(64); // EX_USAGE: The command was used incorrectly.
-    } else if (args.length == 1) {
-      runFile(args[0]);
-    } else {
-      runPrompt();
+    public static void main(String[] args) throws IOException {
+        if (args.length > 1) {
+            System.out.println("Usage: jlox [script]");
+            System.exit(64); // EX_USAGE: The command was used incorrectly.
+        } else if (args.length == 1) {
+            runFile(args[0]);
+        } else {
+            runPrompt();
+        }
     }
-  }
 
-  private static void runFile(String path) throws IOException {
-    byte[] bytes = Files.readAllBytes(Paths.get(path));
-    run(new String(bytes, Charset.defaultCharset()));
+    private static void runFile(String path) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(path));
+        run(new String(bytes, Charset.defaultCharset()));
 
-    if (hasError) {
-      System.exit(65); // EX_DATAERR: The input data is incorrect in some way.
+        if (hasError) System.exit(65); // EX_DATAERR: The input data is incorrect in some way.
     }
-  }
 
-  private static void runPrompt() throws IOException {
-    InputStreamReader input = new InputStreamReader(System.in);
-    BufferedReader reader = new BufferedReader(input);
+    private static void runPrompt() throws IOException {
+        InputStreamReader input = new InputStreamReader(System.in);
+        BufferedReader reader = new BufferedReader(input);
 
-    for (;;) {
-      System.out.print("> ");
-      String line = reader.readLine();
-      if (line == null) {
-        break;
-      }
-      run(line);
-      hasError = false;
+        for (; ; ) {
+            System.out.print("> ");
+            String line = reader.readLine();
+            if (line == null) break;
+            run(line);
+            hasError = false;
+        }
     }
-  }
 
-  private static void run(String source) {
-    Scanner scanner = new Scanner(source);
-    List<Token> tokens = scanner.scanTokens();
+    private static void run(String source) {
+        Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
 
-    for (Token t : tokens) {
-      System.out.println(t);
+        for (Token t : tokens) {
+            System.out.println(t);
+        }
     }
-  }
 
-  static void error(int line, String message) {
-    report(line, "", message);
-  }
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
 
-  private static void report(int line, String where, String message) {
-    System.err.println("[Line " + line + "] Error" + where + ": " + message);
-    hasError = true;
-  }
+    private static void report(int line, String where, String message) {
+        System.err.println("[Line " + line + "] Error" + where + ": " + message);
+        hasError = true;
+    }
 }
