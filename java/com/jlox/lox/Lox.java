@@ -26,7 +26,9 @@ public class Lox {
     byte[] bytes = Files.readAllBytes(Paths.get(path));
     run(new String(bytes, Charset.defaultCharset()));
 
-    if (hasError) System.exit(65); // EX_DATAERR: The input data is incorrect in some way.
+    if (hasError) {
+      System.exit(65); // EX_DATAERR: The input data is incorrect in some way.
+    }
   }
 
   private static void runPrompt() throws IOException {
@@ -36,7 +38,9 @@ public class Lox {
     for (;;) {
       System.out.print("> ");
       String line = reader.readLine();
-      if (line == null) break;
+      if (line == null) {
+        break;
+      }
       run(line);
       hasError = false;
     }
@@ -55,8 +59,8 @@ public class Lox {
     report(line, "", message);
   }
 
-  private static void report(int line, String where, String, message) {
-    System.err.println("[Line " + line + "] Error" + where + ": " + message;
+  private static void report(int line, String where, String message) {
+    System.err.println("[Line " + line + "] Error" + where + ": " + message);
     hasError = true;
   }
 }
